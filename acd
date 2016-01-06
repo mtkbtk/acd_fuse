@@ -36,6 +36,7 @@ class ACDFS(fuse.Fuse):
     api = None
     cache = None
     cachefree = 10
+    domain = None
     download = None
     email = None
     log = None
@@ -67,6 +68,8 @@ class ACDFS(fuse.Fuse):
 
     def main(self):
         try:
+            if self.domain:
+                pyacd.set_amazon_domain(self.domain)
             print "Trying to login from cached sessionfile %s" % self.sessionfile
             with open(self.sessionfile, "rb") as sessfile:
                 session = pyacd.auth.Session()
@@ -462,6 +465,8 @@ if __name__ == '__main__':
                          help="EMAIL login for Amazon Cloud Drive")
     fs.parser.add_option(mountopt="password", metavar="PASSWORD",
                          help="PASSWORD password for Amazon Cloud Drive")
+    fs.parser.add_option(mountopt="domain", metavar="DOMAIN",
+                         help="Domain for Amazon Cloud Drive")
     fs.parser.add_option(mountopt="cachefree",
                          help="What percentage of the filecache drive we must keep free (defaults to 10%)")
 
